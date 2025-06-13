@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i <= MAX_RETRIES; i++) {
       if (Math.random() < SUCCESS_CHANCE || i === MAX_RETRIES) { 
-        quickLog(`${serviceName}: Подключение установлено.`, "success");
+        quickLog(`${serviceName}: Соединение установлено.`, "success");
         return true;
       } else {
         quickLog(`${serviceName}: Ошибка подключения (попытка ${i + 1})...`, "error");
@@ -248,158 +248,201 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function runPreFlightSync() {
-    if (statusLoaderOverlay) {
-      statusLoaderOverlay.style.display = "flex";
-      requestAnimationFrame(() => statusLoaderOverlay.classList.add("visible"));
-    }
-    if (statusLoaderTitle) statusLoaderTitle.textContent = "Подготовка к полету";
-    if (statusLoaderLogs) statusLoaderLogs.innerHTML = "";
-    if (statusLoaderMessage) statusLoaderMessage.textContent = "Инициализация систем...";
-    if (statusLoaderCloseButton) statusLoaderCloseButton.style.display = "none";
+    if (!statusLoaderOverlay || !statusLoaderLogs || !statusLoaderMessage || !statusLoaderTitle || !analysisDisplay) return;
 
-    const services = [
-      "Система навигации",
-      "Датчики погоды",
-      "Система связи",
-      "Контроль двигателей"
-    ];
+    if (statusLoaderTitle) statusLoaderTitle.textContent = "СИНХРОНИЗАЦИЯ ДАННЫХ";
+    statusLoaderLogs.innerHTML = ''; 
+    analysisDisplay.innerHTML = ''; 
+    statusLoaderMessage.innerHTML = ''; 
+    if(statusLoaderCloseButton) statusLoaderCloseButton.style.display = 'none';
+    statusLoaderOverlay.style.display = 'flex';
+    requestAnimationFrame(() => statusLoaderOverlay.classList.add('visible'));
 
-    for (const service of services) {
-      const success = await attemptConnection(service);
-      if (!success) {
-        quickLog(`Критическая ошибка: не удалось подключиться к ${service}`, "error");
-        if (statusLoaderMessage) statusLoaderMessage.textContent = "Ошибка инициализации";
-        if (statusLoaderCloseButton) {
-          statusLoaderCloseButton.style.display = "block";
-          statusLoaderCloseButton.onclick = () => {
-            if (statusLoaderOverlay) {
-              statusLoaderOverlay.classList.remove("visible");
-              setTimeout(() => { if(statusLoaderOverlay && !statusLoaderOverlay.classList.contains('visible')) statusLoaderOverlay.style.display = "none"; }, 300);
-            }
-          };
+    quickLog("Инициализация модулей...", "info");
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    await attemptConnection("BGAMING API");
+    await new Promise(resolve => setTimeout(resolve, 100)); 
+
+    await attemptConnection("Сервера GamblingGPT AI");
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    await attemptConnection("Шлюз АВИАМАСТЕР");
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    quickLog("Все системы синхронизированы.", "success");
+    await new Promise(resolve => setTimeout(resolve, 800)); 
+
+    statusLoaderOverlay.classList.remove('visible');
+    await new Promise(resolve => setTimeout(() => {
+        if (statusLoaderOverlay && !statusLoaderOverlay.classList.contains('visible')) { 
+            statusLoaderOverlay.style.display = "none";
         }
-        return false;
-      }
-    }
-
-    quickLog("Все системы готовы к полету", "success");
-    if (statusLoaderMessage) statusLoaderMessage.textContent = "Системы готовы";
-    if (statusLoaderCloseButton) {
-      statusLoaderCloseButton.style.display = "block";
-      statusLoaderCloseButton.onclick = () => {
-        if (statusLoaderOverlay) {
-          statusLoaderOverlay.classList.remove("visible");
-          setTimeout(() => { if(statusLoaderOverlay && !statusLoaderOverlay.classList.contains('visible')) statusLoaderOverlay.style.display = "none"; }, 300);
-        }
-      };
-    }
-    return true;
+        resolve();
+    }, 200)); 
   }
 
   async function runPostFlightStatus() {
-    if (statusLoaderOverlay) {
-      statusLoaderOverlay.style.display = "flex";
-      requestAnimationFrame(() => statusLoaderOverlay.classList.add("visible"));
-    }
-    if (statusLoaderTitle) statusLoaderTitle.textContent = "Анализ полета";
-    if (statusLoaderLogs) statusLoaderLogs.innerHTML = "";
-    if (statusLoaderMessage) statusLoaderMessage.textContent = "Обработка данных...";
-    if (statusLoaderCloseButton) statusLoaderCloseButton.style.display = "none";
+    if (!statusLoaderOverlay || !statusLoaderLogs || !statusLoaderMessage || !statusLoaderTitle || !statusLoaderCloseButton || !analysisDisplay) return;
 
-    const result = await fetchFlightResult(accountId);
-    if (result) {
-      quickLog("Получены данные о полете", "success");
-      quickLog(result, "info");
-    } else {
-      quickLog("Ошибка при получении данных о полете", "error");
+    if (statusLoaderTitle) statusLoaderTitle.textContent = "ПОЛЕТ ЗАВЕРШЕН";
+    statusLoaderLogs.innerHTML = ''; 
+    analysisDisplay.innerHTML = ''; 
+    statusLoaderMessage.innerHTML = ''; 
+    if(statusLoaderCloseButton) statusLoaderCloseButton.style.display = 'none';
+    statusLoaderOverlay.style.display = 'flex';
+    requestAnimationFrame(() => statusLoaderOverlay.classList.add('visible'));
+    
+    if (aviaDecorativeImage) {
+        aviaDecorativeImage.classList.remove('is-flying-away'); 
+        aviaDecorativeImage.style.left = aviaInitialLeft;
+        aviaDecorativeImage.style.opacity = aviaInitialOpacity;
     }
 
-    if (statusLoaderMessage) statusLoaderMessage.textContent = "Анализ завершен";
+    analysisDisplay.textContent = 'Анализ...'; 
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
+
+    async function fetchFlightResult(bet) {
+      return getFlightResult2(bet).message;
+    }
+    
+    const finalResultMessageText = await fetchFlightResult(accountId || "0");
+    statusLoaderMessage.textContent = finalResultMessageText;
+    
     if (statusLoaderCloseButton) {
-      statusLoaderCloseButton.style.display = "block";
-      statusLoaderCloseButton.onclick = () => {
-        if (statusLoaderOverlay) {
-          statusLoaderOverlay.classList.remove("visible");
-          setTimeout(() => { if(statusLoaderOverlay && !statusLoaderOverlay.classList.contains('visible')) statusLoaderOverlay.style.display = "none"; }, 300);
-        }
-      };
-    }
-  }
-
-  async function fetchFlightResult(bet) {
-    try {
-      return await getFlightResult(bet);
-    } catch (error) {
-      console.error("Error fetching flight result:", error);
-      return null;
+        statusLoaderCloseButton.style.display = 'block'; 
     }
   }
 
   function animateAnalysisTextDots() {
-    if (analysisDotsIntervalId) {
-      clearInterval(analysisDotsIntervalId);
+    analysisDotCount = (analysisDotCount + 1) % 4;
+    let dots = "";
+    for (let i = 0; i < analysisDotCount; i++) {
+      dots += ".";
     }
-    analysisDotCount = 0;
-    if (flightAnalysisTextElement) flightAnalysisTextElement.textContent = "Анализ";
-    analysisDotsIntervalId = setInterval(() => {
-      analysisDotCount = (analysisDotCount + 1) % 4;
-      if (flightAnalysisTextElement) {
-        flightAnalysisTextElement.textContent = "Анализ" + ".".repeat(analysisDotCount);
-      }
-    }, 500);
+    if (flightAnalysisTextElement) flightAnalysisTextElement.textContent = "Анализ" + dots;
   }
 
   function startGameAnimation() {
-    if (gameAnimationId) {
-      cancelAnimationFrame(gameAnimationId);
+    if (ballContainerElement && !ballContainerElement.classList.contains('visible')) {
+        ballContainerElement.style.opacity = '1'; 
+        ballContainerElement.classList.add('visible');
     }
-
-    const startTime = performance.now();
-    const duration = 5000;
-    const distance = 100;
-    const startX = 0;
-    const startY = 0;
+    
+    if (aviaDecorativeImage) {
+        aviaDecorativeImage.classList.remove('is-flying-away');
+        aviaDecorativeImage.style.left = aviaInitialLeft;
+        aviaDecorativeImage.style.opacity = aviaInitialOpacity;
+        void aviaDecorativeImage.offsetWidth; 
+        aviaDecorativeImage.classList.add('is-flying-away');
+    }
 
     if (flightAnalysisSection) {
-      flightAnalysisSection.style.display = "flex";
-      requestAnimationFrame(() => flightAnalysisSection.classList.add("visible"));
+      flightAnalysisSection.style.display = 'flex';
+      requestAnimationFrame(() => flightAnalysisSection.classList.add('visible'));
     }
-    animateAnalysisTextDots();
+    if (flightProgressBarFillElement) flightProgressBarFillElement.style.width = '0%';
+    if (flightAnalysisTextElement) flightAnalysisTextElement.textContent = 'Анализ';
+    analysisDotCount = 0;
+    if (analysisDotsIntervalId) clearInterval(analysisDotsIntervalId);
+    analysisDotsIntervalId = setInterval(animateAnalysisTextDots, 500);
+
+    let startTime = null;
+    const duration = 7000; 
+    const amplitudeY = 20; 
+    const frequencyY = 0.002; 
+    const amplitudeRotate = 5; 
+    const frequencyRotate = 0.003; 
+    const verticalLiftTarget = -60; 
+    const takeOffDuration = 1200;
 
     function animateFrame(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeInOutQuad(progress);
+      if (!startTime) startTime = currentTime;
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
 
-      const currentX = startX + (distance * easedProgress);
-      const currentY = startY + (Math.sin(progress * Math.PI * 2) * 20);
+      if (elapsedTime < duration) {
+        const oscillationY = Math.sin(elapsedTime * frequencyY) * amplitudeY;
+        const rotation = Math.sin(elapsedTime * frequencyRotate) * amplitudeRotate;
+        
+        let currentBaseY;
+        if (elapsedTime < takeOffDuration) {
+          const takeOffProgress = elapsedTime / takeOffDuration;
+          const easedProgress = easeInOutQuad(takeOffProgress); 
+          currentBaseY = easedProgress * verticalLiftTarget;
+        } else {
+          currentBaseY = verticalLiftTarget;
+        }
+        const finalY = currentBaseY + oscillationY;
 
-      if (ballImage) {
-        ballImage.style.transform = `translate(${currentX}px, ${currentY}px)`;
-      }
-      if (flightProgressBarFillElement) {
-        flightProgressBarFillElement.style.width = `${progress * 100}%`;
-      }
+        if (ballImage) ballImage.style.transform = `translateY(${finalY}px) rotate(${rotation}deg)`;
+        
+        if (flightProgressBarFillElement) {
+          flightProgressBarFillElement.style.width = `${progress * 100}%`;
+        }
 
-      if (progress < 1) {
         gameAnimationId = requestAnimationFrame(animateFrame);
-      } else {
-        if (ballImage) ballImage.style.transform = `translate(${distance}px, 0)`;
-        if (flightProgressBarFillElement) flightProgressBarFillElement.style.width = "100%";
+      } else { 
+        if (ballImage) ballImage.style.transform = 'translateY(0px) rotate(0deg)'; 
+        if (ballContainerElement) ballContainerElement.classList.remove('visible'); 
+        
+        if (flightProgressBarFillElement) flightProgressBarFillElement.style.width = '100%';
         if (analysisDotsIntervalId) {
           clearInterval(analysisDotsIntervalId);
           analysisDotsIntervalId = null;
         }
-        if (flightAnalysisTextElement) flightAnalysisTextElement.textContent = "Анализ завершен";
-        if (aviaDecorativeImage) {
-          aviaDecorativeImage.classList.add('is-flying-away');
-        }
-        setTimeout(() => {
-          runPostFlightStatus();
-        }, 1000);
+        hideFlightAnalysis(); 
+        
+        runPostFlightStatus(); 
       }
     }
-
     gameAnimationId = requestAnimationFrame(animateFrame);
+  }
+
+  if (statusLoaderCloseButton) {
+    statusLoaderCloseButton.addEventListener("click", () => {
+        if (gameAnimationId) {
+          cancelAnimationFrame(gameAnimationId);
+          gameAnimationId = null;
+        }
+        
+        hideFlightAnalysis();
+
+        if (statusLoaderOverlay) {
+            statusLoaderOverlay.classList.remove('visible');
+            setTimeout(() => {
+                if (statusLoaderOverlay && !statusLoaderOverlay.classList.contains('visible')) { 
+                    statusLoaderOverlay.style.display = "none";
+                    if (statusLoaderCloseButton) statusLoaderCloseButton.style.display = 'none'; 
+                }
+            }, 200); 
+        }
+
+        if (startButtonElement) {
+            startButtonElement.style.display = "block";
+            requestAnimationFrame(() => startButtonElement.classList.add('visible'));
+        }
+
+        if (bettingPanel) bettingPanel.style.display = "none";
+        if (idErrorMessage) { idErrorMessage.style.display = "none"; idErrorMessage.textContent = ""; }
+
+        if (ballContainerElement) {
+            ballContainerElement.style.opacity = '1';
+            ballContainerElement.classList.add('visible');
+            if (ballImage) ballImage.style.transform = 'translateY(0px) rotate(0deg)';
+        }
+
+        if (aviaDecorativeImage) {
+            aviaDecorativeImage.classList.remove('is-flying-away');
+            aviaDecorativeImage.style.left = aviaInitialLeft;
+            aviaDecorativeImage.style.opacity = aviaInitialOpacity;
+        }
+
+        accountId = "";
+        if (confirmButton) confirmButton.disabled = true;
+        if (accountIdInput) accountIdInput.value = ""; 
+        if (analysisDisplay) analysisDisplay.innerHTML = ''; 
+        if (statusLoaderMessage) statusLoaderMessage.innerHTML = ''; 
+    });
   }
 });
