@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     await new Promise(resolve => setTimeout(resolve, 1500)); 
 
     async function fetchFlightResult(bet) {
-      return getFlightResult2(bet).message;
+      return getFlightResult(bet).message;
     }
     
     const finalResultMessageText = await fetchFlightResult(accountId || "0");
