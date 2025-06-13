@@ -176,6 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       startButtonElement.classList.remove('visible'); 
       setTimeout(() => { if (startButtonElement && !startButtonElement.classList.contains('visible')) startButtonElement.style.display = "none"; }, 500); 
+      if (backButtonElement) {
+        backButtonElement.classList.remove('visible');
+        setTimeout(() => { if (backButtonElement && !backButtonElement.classList.contains('visible')) backButtonElement.style.display = "none"; }, 500);
+      }
       if (accountIdInput) accountIdInput.value = ""; 
       if (idErrorMessage) { idErrorMessage.style.display = "none"; idErrorMessage.textContent = ""; }
       if (ballContainerElement) ballContainerElement.classList.remove('visible'); 
