@@ -1,0 +1,53 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prosto+One&amp;display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropicana</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+
+    <div class="background-elements">
+        <img id="ob1" class="obloko" src="images/obl.png" alt="Cloud">
+        <img id="ob2" class="obloko2" src="images/obl.png" alt="Cloud">
+    </div>
+	
+	<div class="winner">
+        <img class="logo" src="images/logo.png">
+    </div>
+
+    <main class="main-content">
+        <div class="game-display-area">
+            <div class="iframe-clipper">
+                <iframe id="myIframe" src="https://100hp.app/tropicana/onewin/" onload="hideElements()" scrolling="no"></iframe>
+            </div>
+        </div>
+
+        <div class="predictions-panel">
+            <div class="panel-decoration"></div>
+            <div class="pred-txt">
+                <a>NEXT ROUND PREDICTIONS</a>
+            </div>
+            <div id="responseText" class="text prediction-value"></div>
+            <div id="coefficients" class="text coefficient-value"></div>
+        </div>
+    </main>
+
+    <nav class="bottom-navigation">
+        <div class="tab-bar">
+            <button class="tab-button games-icon" data-tab="Games" onclick="window.location.href='https://hahgitcla.github.io/t';">
+                <img src="images/back.png" alt="Игры">
+                <span>Back</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="troywell-avia"></div>
+    <div class="troywell-caa"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

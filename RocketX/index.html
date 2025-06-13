@@ -1,0 +1,52 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prosto+One&amp;display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-rocket"></div>
+            <div class="preloader-text">ЗАГРУЗКА...</div>
+        </div>
+    </div>
+
+    <div class="cv">
+        <img id="ob1" class="obloko" src="images/obl.svg" alt="Облако">
+        <img id="ob2" class="obloko2" src="images/obl.svg" alt="Облако">
+    </div>
+
+    <div class="winner">
+        <img class="logo" src="images/logo.png" alt="Логотип">
+    </div>
+
+    <div class="rocket">
+        <div class="visible">
+            <iframe id="myIframe" src="https://100hp.app/rocketx/onewin/" onload="hideElements()" scrolling="no"></iframe>
+        </div>
+
+        <div class="loader2"></div>
+
+        <div class="pred-txt">
+            <a>NEXT ROUND PREDICTIONS</a>
+        </div>
+        <div id="responseText" class="text"></div>
+
+		<button class="custom-back-button" onclick="window.location.href='https://hahgitcla.github.io/t';">
+            <svg class="custom-back-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px" height="20px"><path d="M11.828 12L16.414 16.586 15 18 9 12 15 6 16.414 7.414zM7 11H15V13H7z"/></svg>
+            <span>Вернуться</span>
+        </button>
+    </div>
+    
+    <div id="result" class="rand"></div>
+    <div class="troywell-avia"></div>
+    <div class="troywell-caa"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
