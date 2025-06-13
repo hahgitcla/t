@@ -21,46 +21,34 @@ async function checkSignal() {
     let randomNumber1 = getRan(1.1, 5.0).toFixed(2);
     const url = 'https://crash-gateway-cr.100hp.app/state?id_n=100hpgaming_tropicana&id_i=8';
 
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': getAuthorizationToken()
-            }
-        });
-        if (!response.ok) {
-            console.error('Network response was not ok for checkSignal:', response.statusText);
-            return;
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': getAuthorizationToken()
         }
-        const data = await response.json();
-        const state = data.current_state;
+    });
 
-        let responseTextEl = document.getElementById('responseText');
-        if (!responseTextEl) {
-            console.error('Element with ID responseText not found.');
-            return;
-        }
+    const data = await response.json();
+    const state = data.current_state;
 
-        if (state === "betting" && Date.now() - lastBettingTime > 5000) {
-            let resultText = `${randomNumber1}x`;
-            responseTextEl.textContent = resultText;
-            responseTextEl.className = 'text prediction-value betting';
-            lastBettingTime = Date.now();
-        } else if (state === "ending") {
-            responseTextEl.textContent = "Waiting..";
-            responseTextEl.className = 'text prediction-value fly';
-        } else if (state !== "betting") {
-            if (responseTextEl.textContent !== "Waiting.." && !responseTextEl.classList.contains('betting')) {
-            }
-        }
+    let responseTextEl = document.getElementById('responseText');
+    if (!responseTextEl) {
+        console.error('Element with ID responseText not found.');
+        return;
+    }
 
-    } catch (error) {
-        console.error('Error in checkSignal:', error);
-        let responseTextEl = document.getElementById('responseText');
-        if (responseTextEl) {
-            responseTextEl.textContent = "Error";
-            responseTextEl.className = 'text prediction-value error';
+    if (state === "betting" && Date.now() - lastBettingTime > 5000) {
+        let resultText = `${randomNumber1}x`;
+        responseTextEl.textContent = resultText;
+        responseTextEl.className = 'text prediction-value betting';
+        lastBettingTime = Date.now();
+    } else if (state === "ending") {
+        responseTextEl.textContent = "Waiting..";
+        responseTextEl.className = 'text prediction-value fly';
+    } else if (state !== "betting") {
+        if (responseTextEl.textContent !== "Waiting.." && !responseTextEl.classList.contains('betting')) {
         }
     }
+
 }
 
 function fetchDataAndUpdate() {
@@ -101,7 +89,6 @@ function updateCoefficients(coefficients) {
 }
 
 fetchDataAndUpdate();
+setInterval(fetchDataAndUpdate, 100);
+let intervalId = setInterval(checkSignal, 100);
 checkSignal();
-
-setInterval(fetchDataAndUpdate, 2000);
-setInterval(checkSignal, 1000);
