@@ -1,4 +1,4 @@
-let lastBettingTime = 0;
+let lastBettingTime = 0; 
 let tokenIndex = 0;
 
 const tokens = [
@@ -20,53 +20,31 @@ function getRan(min, max) {
 async function checkSignal() {
     let randomNumber1 = getRan(1.1, 5.0).toFixed(2);
     const url = 'https://crash-gateway-cc-cr.gamedev-tech.cc/state?id_n=1play_rocketx&id_i=1';
-    
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': getAuthorizationToken()
-            }
-        });
-
-        if (!response.ok) {
-            console.error("API Error:", response.status, await response.text().catch(() => "Could not read error body"));
-            const responseTextEl = document.getElementById('responseText');
-            if (responseTextEl) {
-                responseTextEl.textContent = "Error";
-                responseTextEl.className = 'text fly';
-            }
-            return;
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': getAuthorizationToken()
         }
+    });
+    const data = await response.json();
+    const state = data.current_state;
 
-        const data = await response.json();
-        const state = data.current_state;
 
-
-        let responseText = document.getElementById('responseText');
-        if (!responseText) {
-            console.error('Element with ID responseText not found.');
-            return;
-        }
-
-        if (state === "betting" && Date.now() - lastBettingTime > 5000) {
-            let resultText = `${randomNumber1}x`;
-            document.getElementById("responseText").textContent = resultText;
-            localStorage.setItem('resultText', resultText);
-            responseText.className = 'text betting';
-            lastBettingTime = Date.now();
-        } else if (state === "ending") {
-            responseText.textContent = "Waiting..";
-            responseText.className = 'text fly';
-        }
-
-    } catch (error) {
-        console.error('Error fetching signal state:', error);
-        const responseTextEl = document.getElementById('responseText');
-        if (responseTextEl) {
-            responseTextEl.textContent = "Offline";
-            responseTextEl.className = 'text fly';
-        }
+    let responseText = document.getElementById('responseText');
+    if (!responseText) {
+        console.error('Element with ID responseText not found.');
+        return;
     }
+
+    if (state === "betting" && Date.now() - lastBettingTime > 5000) {
+        let resultText = `${randomNumber1}x`;
+        document.getElementById("responseText").textContent = resultText;
+        localStorage.setItem('resultText', resultText);
+        responseText.className = 'text betting';        
+        lastBettingTime = Date.now();
+    } else if (state === "ending") {
+        responseText.textContent = "Waiting..";
+        responseText.className = 'text fly';
+    } 
 }
 
 function fetchDataAndUpdate() {
@@ -87,30 +65,18 @@ function fetchDataAndUpdate() {
 function updateCoefficients(coefficients) {
     const coefficientsDiv = document.getElementById('coefficients');
     if (!coefficientsDiv) {
+        console.error('Element with ID coefficients not found.');
         return;
     }
 
     if (coefficients !== 1) {
-        coefficientsDiv.innerText = `x${coefficients}`;
-    }
+        coefficientsDiv.innerText = `x${coefficients}`; 
+        coefficientsDiv.classList.remove('smallt');
+        coefficientsDiv.classList.add('kif');
+    } 
 }
 
+fetchDataAndUpdate();
+setInterval(fetchDataAndUpdate, 100);
 let intervalId = setInterval(checkSignal, 100);
 checkSignal();
-
-window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        setTimeout(() => {
-            preloader.classList.add('hidden');
-        }, 1800);
-    }
-});
-
-function hideElements() {
-    console.log("iframe loaded, hideElements function called.");
-    const preloader = document.getElementById('preloader');
-    if (preloader && !preloader.classList.contains('hidden')) {
-        preloader.classList.add('hidden');
-    }
-}
