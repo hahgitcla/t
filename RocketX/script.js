@@ -1,4 +1,4 @@
-let lastBettingTime = 0; 
+let lastBettingTime = 0;
 let tokenIndex = 0;
 
 const tokens = [
@@ -25,9 +25,9 @@ async function checkSignal() {
             'Authorization': getAuthorizationToken()
         }
     });
+
     const data = await response.json();
     const state = data.current_state;
-
 
     let responseText = document.getElementById('responseText');
     if (!responseText) {
@@ -39,12 +39,12 @@ async function checkSignal() {
         let resultText = `${randomNumber1}x`;
         document.getElementById("responseText").textContent = resultText;
         localStorage.setItem('resultText', resultText);
-        responseText.className = 'text betting';        
+        responseText.className = 'text betting';
         lastBettingTime = Date.now();
     } else if (state === "ending") {
         responseText.textContent = "Waiting..";
         responseText.className = 'text fly';
-    } 
+    }
 }
 
 function fetchDataAndUpdate() {
@@ -65,18 +65,30 @@ function fetchDataAndUpdate() {
 function updateCoefficients(coefficients) {
     const coefficientsDiv = document.getElementById('coefficients');
     if (!coefficientsDiv) {
-        console.error('Element with ID coefficients not found.');
         return;
     }
 
     if (coefficients !== 1) {
-        coefficientsDiv.innerText = `x${coefficients}`; 
-        coefficientsDiv.classList.remove('smallt');
-        coefficientsDiv.classList.add('kif');
-    } 
+        coefficientsDiv.innerText = `x${coefficients}`;
+    }
 }
 
-fetchDataAndUpdate();
-setInterval(fetchDataAndUpdate, 100);
 let intervalId = setInterval(checkSignal, 100);
 checkSignal();
+
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+        }, 1800);
+    }
+});
+
+function hideElements() {
+    console.log("iframe loaded, hideElements function called.");
+    const preloader = document.getElementById('preloader');
+    if (preloader && !preloader.classList.contains('hidden')) {
+        preloader.classList.add('hidden');
+    }
+}
