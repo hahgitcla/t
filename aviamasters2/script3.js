@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const ballContainerElement = document.getElementById("ballContainer");
   const startButtonElement = document.getElementById("startButton"); 
+  const backButtonElement = document.getElementById("backButton");
 
   const preloaderHashDisplayElement = document.getElementById('preloaderHashDisplay');
   const siteHashDisplayElement = document.getElementById('siteSessionHashDisplay'); 
@@ -91,6 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
             startButtonElement.style.display = 'block'; 
             requestAnimationFrame(() => startButtonElement.classList.add('visible'));
           }
+          if (backButtonElement) {
+            backButtonElement.style.display = 'block';
+            requestAnimationFrame(() => backButtonElement.classList.add('visible'));
+          }
           if (siteHashDisplayElement) siteHashDisplayElement.classList.add('visible');
         }, { once: true });
         requestAnimationFrame(() => requestAnimationFrame(() => clonedLogo.classList.add('flying')));
@@ -113,6 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (startButtonElement) {
           startButtonElement.style.display = 'block';
           startButtonElement.classList.add('visible');
+      }
+      if (backButtonElement) {
+          backButtonElement.style.display = 'block';
+          backButtonElement.classList.add('visible');
       }
       if (siteHashDisplayElement) siteHashDisplayElement.classList.add('visible');
     }
