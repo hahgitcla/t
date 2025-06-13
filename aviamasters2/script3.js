@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let generatedHash = "";
 
-  (async () => {
+ (async () => {
   generatedHash = await fetchHashFromServer();
 
   if (preloaderHashDisplayElement) {
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     siteHashDisplayElement.textContent = generatedHash;
   }
 
+  // запуск прелоадера после получения хэша
   setTimeout(() => {
     if (preloader) {
       if (mainGameContent) mainGameContent.style.display = 'flex';
@@ -186,11 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateConfirmButtonState() {
     if (!accountIdInput || !confirmButton || !idErrorMessage) return; 
     const idValue = accountIdInput.value.trim();
-    const onlyFigures = /^\d+$/;
+    const толькоЦифры = /^\d+$/;
     let isValid = true;
     const genericErrorMessage = "Введите корректную сумму"; 
     if (idValue === "") { confirmButton.disabled = true; idErrorMessage.style.display = "none"; idErrorMessage.textContent = ""; return; }
-    if (!onlyFigures.test(idValue) || idValue.length < 1 || idValue.length > 9) isValid = false;
+    if (!толькоЦифры.test(idValue) || idValue.length < 1 || idValue.length > 9) isValid = false;
     if (isValid) { confirmButton.disabled = false; idErrorMessage.style.display = "none"; idErrorMessage.textContent = ""; }
     else { confirmButton.disabled = true; idErrorMessage.textContent = genericErrorMessage; idErrorMessage.style.display = "block"; }
   }
