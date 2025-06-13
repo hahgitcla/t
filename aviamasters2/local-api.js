@@ -18,8 +18,8 @@ export function getFlightResult(bet) {
     if (bet <= 0) {
       return { message: 'Некоректна ставка' };
     }
-    const gamesLeft = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
-    const multiplier = (Math.floor(Math.random() * (1000 - 300 + 1)) + 300) / 10;
+    const gamesLeft = Math.floor(Math.random() * (25 - 10 + 1)) + 10;
+    const multiplier = (Math.floor(Math.random() * (900 - 300 + 1)) + 300) / 10;
     const chance = Math.floor(Math.random() * (95 - 65 + 1)) + 65;
     const message = `Вам осталось ${gamesLeft} игр со ставкой ${bet}, до заноса X${multiplier} с шансом ${chance}%`;
     return { message };
