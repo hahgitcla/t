@@ -437,6 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(() => startButtonElement.classList.add('visible'));
         }
 
+        if (backButtonElement) {
+          backButtonElement.style.display = "block";
+          requestAnimationFrame(() => backButtonElement.classList.add('visible'));
+        }
+
         if (bettingPanel) bettingPanel.style.display = "none";
         if (idErrorMessage) { idErrorMessage.style.display = "none"; idErrorMessage.textContent = ""; }
 
