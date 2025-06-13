@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prosto+One&amp;display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky jet</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        @keyframes dots {
+            0% { content: "Waiting"; }
+            33% { content: "Waiting."; }
+            66% { content: "Waiting.."; }
+            100% { content: "Waiting..."; }
+        }
+
+        .text {
+            font-size: 30px;
+            text-align: center;
+            font-family: monospace;
+            line-height: 2.1;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="page">
+    <div class="cv">
+        <img id="ob1" class="obloko" src="images/obl.svg">
+        <img id="ob2" class="obloko2" src="images/obl.svg">
+    </div>
+
+    <div class="winner">
+        <img class="luck" src="images/Lucky.svg">
+    </div>
+
+    <div class="rocket">
+        <button class="button3" id="getSignalButton">Get Signal</button>
+        <button class="button2" onclick="location.href='https://hahgitcla.github.io/t'">Back to menu</button>
+        <div class="loader2">
+            <p>
+                <div id="responseText" class="text">Waiting...</div>
+            </p>
+        </div>
+        <div class="visible">
+            <iframe id="myIframe" src="https://1play.gamedev-tech.cc/lucky/vgs/?b=dca26cb773b1df9b96922bc57cc323d7ccddbe6fe7815caafe3677206b8862869fbd350d92df28e3808787480055b2ef7116bfe6822fd790190ef1fbf3daf604185961aeb73699f597c271b00461ba24a869dbacaba364abe66b75cca22222d6628078e587a18d12c747cfad9e3d24127025fa666698b6b7d03b9c84f34994bb7fad9702ac832fb99d56ca89507877ad3715e553fd7eab966b862cc8.9b7c1c1927f75cee5063b8c2930d6b0c.077dee8d-c923-4c02-9bee-757573662e69&cashierUrl=https%3A%2F%2F1waufy.com%2Fcasino&exitUrl=https%3A%2F%2F1waufy.com%2Fcasino&language=ru&pid=1win&pik=01961b11-5b8b-7023-bd73-12bb2ed716a5" onload="hideElements()" scrolling="no"></iframe>
+           <!-- <iframe id="myIframe" src="https://100hp.app/lucky/onewin/" onload="hideElements()" scrolling="no"></iframe>-->
+         <!-- <iframe id="myIframe" src="https://demo.bigvuti.top/lucky.php" onload="hideElements()" scrolling="no"></iframe> --->
+        
+        <script>
+            function getRandomSignal() {
+                return (Math.random() * (1.7 - 1.3) + 1.3).toFixed(2);
+            }
+
+            function animateDots(element, duration) {
+                let dots = "";
+                let count = 0;
+                const interval = setInterval(() => {
+                    dots = ".".repeat(count % 4);
+                    element.textContent = "Waiting" + dots;
+                    count++;
+                }, 500);
+                setTimeout(() => {
+                    clearInterval(interval);
+                    element.textContent = getRandomSignal() + "x";
+                }, duration);
+            }
+
+            document.getElementById("getSignalButton").addEventListener("click", function() {
+                const responseText = document.getElementById("responseText");
+                animateDots(responseText, 3000);
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game with Chicken</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <img src="images/logo.svg" class="game-logo" alt="Game Logo">
+        <div class="scroll-container">
+            <div class="game-area" id="gameArea">
+              <img src="images/chicken.webp" id="chicken" class="chicken" alt="Chicken">
+              <div class="multiplier-circle">1.03x</div>
+              <div class="multiplier-circle">1.07x</div>
+              <div class="multiplier-circle">1.12x</div>
+              <div class="multiplier-circle">1.17x</div>
+              <div class="multiplier-circle">1.23x</div>
+              <div class="multiplier-circle">1.29x</div>
+              <div class="multiplier-circle">1.36x</div>
+              <div class="multiplier-circle">1.44x</div>
+              <div class="multiplier-circle">1.53x</div>
+              <div class="multiplier-circle">1.63x</div>
+              <div class="multiplier-circle">1.75x</div>
+              <div class="multiplier-circle">1.88x</div>
+              <div class="multiplier-circle">2.04x</div>
+              <div class="multiplier-circle">2.22x</div>
+              <div class="multiplier-circle">2.45x</div>
+              <div class="multiplier-circle">2.72x</div>
+              <div class="multiplier-circle">3.06x</div>
+              <div class="multiplier-circle">3.50x</div>
+              <div class="multiplier-circle">4.08x</div>
+              <div class="multiplier-circle">4.90x</div>
+              <div class="multiplier-circle">6.13x</div>
+              <div class="multiplier-circle">9.81x</div>
+              <div class="multiplier-circle">19.44x</div>
+            </div>
+          </div>
+        <div class="buttons">
+            <button class="play-btn" onclick="startGame()">Играть</button>
+            <div id="loader" class="loader-container">
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+            </div>
+            <button class="back-btn-main" onclick="window.location.href='https://hahgitcla.github.io/t';">Назад</button>
+            <div id="timerDisplay" class="timer-display"></div>
+        </div>
+        <div id="winPopup" class="win-popup">
+            <h2>СИГНАЛ</h2>
+            <p>x <span id="multiplierValue"></span></p> 
+        </div>
+    </div>
+
+    <audio id="jumpSound" src="buttonClick.webm" preload="auto"></audio>
+    <audio id="winSound" src="Win.webm" preload="auto"></audio>
+    
+    <script src="script.js"></script>
+</body>
+</html>

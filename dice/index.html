@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dice Game</title>
+<style>
+
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_breitschrift.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Intro';
+    src: url('fonts/intro.otf') format('opentype'); /* Убедитесь, что путь правильный */
+}
+
+body {
+    width: 100vw;
+    width: center;
+    touch-action: none; /* Отключаем стандартные жесты, такие как зум */
+    user-select: none;  /* Отключаем выделение текста */
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+#game {
+    touch-action: none; /* Отключаем стандартные жесты, такие как зум */
+    user-select: none;  /* Отключаем выделение текста */
+    text-align: center;
+    background: rgba(51, 51, 51, 0.3); /* Прозрачный стеклянный эффект */
+    padding: 15px;
+    border-radius: 30px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px); /* Размытие фона */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Светлая рамка */
+    transform: scale(1.5);
+}
+
+#number {
+    font-size: 65px;
+    color: #fff;
+    font-weight: bolder;
+    text-align: center;
+    margin: 12px 0;
+    transition: transform 0.3s ease-in-out;
+    font-family: 'Intro', sans-serif;
+    text-decoration: underline;
+    text-decoration-thickness: 5px;
+    border-radius: 50px;
+}
+
+#result {
+    font-size: 65px;
+    color: #fff;
+    font-weight: bolder;
+    text-align: center;
+    margin: 12px 0;
+    transition: transform 0.3s ease-in-out;
+    font-family: 'Intro', sans-serif;
+}
+
+
+button {
+    background-image: linear-gradient(to right, #1084ff, #0056b3);
+    color: white;
+    padding: 30px 60px;
+    font-family: 'Halvar Breitschrift', sans-serif;
+    font-weight: bolder;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 54px;
+    transition: background-position 0.5s, box-shadow 0.5s;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: left 0.5s;
+}
+
+button:hover::after {
+    left: 100%;
+}
+
+button:hover {
+    background-position: right center;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+#timer {
+    width: 200px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: 10px auto;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 110, 255, 0.5);
+}
+
+#timer-progress {
+    height: 100%;
+    background: linear-gradient(to right, #007bff, #00d4ff);
+    width: 100%;
+    border-radius: 10px;
+    transition: width 5s linear;
+    position: relative;
+}
+
+#result {
+    color: #32aaff;
+}
+
+#result:contains("МЕНЬШЕ") {
+    color: #ff4747;
+}
+#message {
+    font-family: 'Halvar Breitschrift', sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+    margin-top: 10px;
+    display: none;
+}
+
+.tab {
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 10px 0;
+    height: 70px; /* Фиксированная высота для десктопа */
+}
+
+.tab button {
+    background: none;
+    flex: 1 0 auto;
+    margin: 0 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 20px;
+    transition: 0.3s;
+    color: #fff;
+    text-align: center;
+    border-radius: 50px;
+    font-size: 16px;
+    font-family: 'Intro', Arial, sans-serif;
+}
+
+.tab button img {
+    max-width: 38px;
+    height: 38px;
+}
+
+.tab button:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+.tab button.active {
+    background-color: #666;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Медиазапросы для адаптации на мобильных устройствах */
+@media (max-width: 768px) {
+    .tab {
+        height: 70px; /* Фиксированная высота для планшетов */
+    }
+
+    .tab button {
+        margin: 0 5px;
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .tab button img {
+        max-width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    #game {
+        transform: scale(1.2); /* Увеличил размер блока */
+        padding: 40px; /* Подогнал отступы */
+    }
+    
+    #number,
+    #result {
+        font-size: 54px;
+    }
+    button {
+        font-size: 48px;
+        padding: 24px 45px;
+    }
+    #timer {
+        width: 150px;
+    }
+    #online-players {
+        font-size: 18px;
+        padding: 10px;
+    }
+}
+</style>
+</head>
+<body>
+    <div id="game">
+        <div id="number"></div>
+        <div id="result"></div>
+        <button onclick="rollDice()" id="rollButton">Сигнал</button>
+        <div id="timer">
+            <div id="timer-progress"></div>
+        </div>
+        <div id="message">Пожалуйста, подождите</div>
+    </div>
+
+    <div class="tab">
+    <a href="../index.html"><button class="tablinks games-icon" data-tab="Games" data-link="link">
+        <img src="../back.png" alt="Игры">
+    </button></a>
+</div>
+<script>
+    let timerInterval;
+    let timeLeft = 10;
+    let buttonEnabled = true;
+    let onlineCount = 370;
+    let onlineInterval;
+
+    function rollDice() {
+        if (!buttonEnabled) return;
+        buttonEnabled = false;
+        document.getElementById("message").style.display = "none";
+        const randomNumber = Math.floor(Math.random() * 97) + 3;
+        const resultDiv = document.getElementById("result");
+        const numberDiv = document.getElementById("number");
+        numberDiv.textContent = randomNumber;
+        const result = randomNumber < 50 ? "БОЛЬШЕ" : "МЕНЬШЕ";
+        resultDiv.textContent = result;
+        resultDiv.style.color = result === "БОЛЬШЕ" ? "#32aaff" : "#ff4747";
+        numberDiv.style.textDecorationColor = resultDiv.style.color;
+
+        startTimer();
+        animateText();
+    }
+
+    function animateNumber(targetNumber, elementId) {
+    let currentNumber = (elementId === 'online-count') ? onlineCount : 1;
+    const numberDiv = document.getElementById(elementId);
+    const duration = 500; // Длительность анимации в миллисекундах
+    const startTime = performance.now();
+
+    function step(timestamp) {
+        const progress = Math.min((timestamp - startTime) / duration, 1); // Прогресс анимации (0-1)
+        const easedProgress = easeInOutCubic(progress); // Применение функции сглаживания
+        const diff = targetNumber - ((elementId === 'online-count') ? onlineCount : 1); //разница между начальным и конечным значением
+        currentNumber = Math.round((elementId === 'online-count') ? onlineCount : 1 + diff * easedProgress); // значение с учетом сглаживания
+
+        numberDiv.textContent = currentNumber;
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            if (elementId === 'online-count') onlineCount = targetNumber;
+        }
+    }
+
+    requestAnimationFrame(step); // Запуск анимации
+}
+
+function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+}
+
+function startTimer() {
+        let progressBar = document.getElementById("timer-progress");
+        progressBar.style.transition = "none";
+        progressBar.style.width = "100%";
+        setTimeout(() => {
+            progressBar.style.transition = "width 5s linear";
+            progressBar.style.width = "0%";
+        }, 50);
+        
+        setTimeout(() => {
+            progressBar.style.transition = "none";
+            progressBar.style.width = "100%";
+            buttonEnabled = true;
+        }, 5500);
+    }
+
+    function updateTimer() {
+        timeLeft -= 0.1;
+        const progressWidth = (timeLeft / 5) * 100 + '%';
+        document.getElementById("timer-progress").style.width = progressWidth;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            buttonEnabled = true;
+            document.getElementById('message').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById("timer-progress").style.width = '100%';
+                document.getElementById("timer-progress").style.backgroundColor = '#006eff';
+            }, 100);
+        }
+    }
+
+
+    function determineResult(number) {
+        if (number < 20) {
+            return "БОЛЬШЕ";
+        } else if (number > 88) {
+            return "МЕНЬШЕ";
+        } else {
+            return Math.random() < 0.5 ? "БОЛЬШЕ" : "МЕНЬШЕ";
+        }
+    }
+
+    function animateText() {
+        const numberDiv = document.getElementById("number");
+        numberDiv.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+            numberDiv.style.transform = "translateY(0)";
+        }, 300);
+    }
+
+    function updateOnlineCount() {
+        const changeType = Math.random() < 0.5 ? 'add' : 'subtract';
+        const changeValue = changeType === 'add' ? Math.floor(Math.random() * 6) + 5 : Math.floor(Math.random() * 4) + 4;
+        const targetCount = onlineCount + (changeType === 'add' ? changeValue : -changeValue);
+        animateNumber(targetCount, 'online-count');
+    }
+
+    document.getElementById("rollButton").addEventListener("click", function() {
+        if (!buttonEnabled) {
+            document.getElementById('message').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('message').style.display = 'none';
+            }, 2000);
+        }
+    });
+
+    onlineInterval = setInterval(updateOnlineCount, 5000);
+    setInterval( () => {
+        const changeValue = Math.floor(Math.random() * 4) + 4;
+        const targetCount = onlineCount - changeValue;
+        if(targetCount<0) {
+            animateNumber(0, 'online-count');
+        } else {
+            animateNumber(targetCount, 'online-count');
+        }
+    }, 20000);
+
+</script>
+</body>
+</html>
